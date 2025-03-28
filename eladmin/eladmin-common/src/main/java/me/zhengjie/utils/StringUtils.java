@@ -20,6 +20,7 @@ import cn.hutool.http.useragent.UserAgentUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.dreamlu.mica.ip2region.core.Ip2regionSearcher;
 import net.dreamlu.mica.ip2region.core.IpInfo;
+
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.net.InetAddress;
@@ -162,7 +163,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      */
     public static String getCityInfo(String ip) {
         IpInfo ipInfo = IP_SEARCHER.memorySearch(ip);
-        if(ipInfo != null){
+        if (ipInfo != null) {
             return ipInfo.getAddress();
         }
         return null;
@@ -174,7 +175,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
     public static String getBrowser(HttpServletRequest request) {
         UserAgent ua = UserAgentUtil.parse(request.getHeader("User-Agent"));
         String browser = ua.getBrowser().toString() + " " + ua.getVersion();
-        return browser.replace(".0.0.0","");
+        return browser.replace(".0.0.0", "");
     }
 
     /**
@@ -201,10 +202,10 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         try {
             InetAddress candidateAddress = null;
             // 遍历所有的网络接口
-            for (Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); interfaces.hasMoreElements();) {
+            for (Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces(); interfaces.hasMoreElements(); ) {
                 NetworkInterface anInterface = interfaces.nextElement();
                 // 在所有的接口下再遍历IP
-                for (Enumeration<InetAddress> inetAddresses = anInterface.getInetAddresses(); inetAddresses.hasMoreElements();) {
+                for (Enumeration<InetAddress> inetAddresses = anInterface.getInetAddresses(); inetAddresses.hasMoreElements(); ) {
                     InetAddress inetAddr = inetAddresses.nextElement();
                     // 排除loopback类型地址
                     if (!inetAddr.isLoopbackAddress()) {
@@ -232,7 +233,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
     }
 
-    @SuppressWarnings({"unchecked","all"})
+    @SuppressWarnings({"unchecked", "all"})
     public static List<Field> getAllFields(Class clazz, List<Field> fields) {
         if (clazz != null) {
             fields.addAll(Arrays.asList(clazz.getDeclaredFields()));

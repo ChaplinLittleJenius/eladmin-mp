@@ -21,20 +21,24 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.domain.DictDetail;
-import me.zhengjie.modules.system.mapper.DictMapper;
 import me.zhengjie.modules.system.domain.dto.DictDetailQueryCriteria;
-import me.zhengjie.utils.*;
 import me.zhengjie.modules.system.mapper.DictDetailMapper;
+import me.zhengjie.modules.system.mapper.DictMapper;
 import me.zhengjie.modules.system.service.DictDetailService;
+import me.zhengjie.utils.CacheKey;
+import me.zhengjie.utils.PageResult;
+import me.zhengjie.utils.PageUtil;
+import me.zhengjie.utils.RedisUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
-*/
+ * @author Zheng Jie
+ * @date 2019-04-10
+ */
 @Service
 @RequiredArgsConstructor
 public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDetail> implements DictDetailService {
@@ -72,9 +76,9 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
     public List<DictDetail> getDictByName(String name) {
         String key = CacheKey.DICT_NAME + name;
         List<DictDetail> dictDetails = redisUtils.getList(key, DictDetail.class);
-        if(CollUtil.isEmpty(dictDetails)){
+        if (CollUtil.isEmpty(dictDetails)) {
             dictDetails = dictDetailMapper.findByDictName(name);
-            redisUtils.set(key, dictDetails, 1 , TimeUnit.DAYS);
+            redisUtils.set(key, dictDetails, 1, TimeUnit.DAYS);
         }
         return dictDetails;
     }
@@ -88,7 +92,7 @@ public class DictDetailServiceImpl extends ServiceImpl<DictDetailMapper, DictDet
         delCaches(dictDetail);
     }
 
-    public void delCaches(DictDetail dictDetail){
+    public void delCaches(DictDetail dictDetail) {
         Dict dict = dictMapper.selectById(dictDetail.getDictId());
         redisUtils.del(CacheKey.DICT_NAME + dict.getName());
     }

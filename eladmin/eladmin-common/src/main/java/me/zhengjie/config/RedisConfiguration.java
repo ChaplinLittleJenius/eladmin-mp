@@ -38,6 +38,7 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.HashMap;
@@ -54,14 +55,14 @@ import java.util.Map;
 public class RedisConfiguration extends CachingConfigurerSupport {
 
     // 自动识别json对象白名单配置（仅允许解析的包名，范围越小越安全）
-    private static final String[] WHITELIST_STR = {"me.zhengjie" };
+    private static final String[] WHITELIST_STR = {"me.zhengjie"};
 
     /**
-     *  设置 redis 数据默认过期时间，默认2小时
-     *  设置@cacheable 序列化方式
+     * 设置 redis 数据默认过期时间，默认2小时
+     * 设置@cacheable 序列化方式
      */
     @Bean
-    public RedisCacheConfiguration redisCacheConfiguration(){
+    public RedisCacheConfiguration redisCacheConfiguration() {
         FastJsonRedisSerializer<Object> fastJsonRedisSerializer = new FastJsonRedisSerializer<>(Object.class);
         RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig();
         configuration = configuration.serializeValuesWith(RedisSerializationContext.
@@ -90,6 +91,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
 
     /**
      * 缓存管理器
+     *
      * @param redisConnectionFactory /
      * @return 缓存管理器
      */
@@ -107,17 +109,17 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     @Bean
     public KeyGenerator keyGenerator() {
         return (target, method, params) -> {
-            Map<String,Object> container = new HashMap<>(8);
+            Map<String, Object> container = new HashMap<>(8);
             Class<?> targetClassClass = target.getClass();
             // 类地址
-            container.put("class",targetClassClass.toGenericString());
+            container.put("class", targetClassClass.toGenericString());
             // 方法名称
-            container.put("methodName",method.getName());
+            container.put("methodName", method.getName());
             // 包名称
-            container.put("package",targetClassClass.getPackage());
+            container.put("package", targetClassClass.getPackage());
             // 参数列表
             for (int i = 0; i < params.length; i++) {
-                container.put(String.valueOf(i),params[i]);
+                container.put(String.valueOf(i), params[i]);
             }
             // 转为JSON字符串
             String jsonString = JSON.toJSONString(container);
@@ -127,28 +129,31 @@ public class RedisConfiguration extends CachingConfigurerSupport {
     }
 
     @Bean
-    @SuppressWarnings({"unchecked","all"})
+    @SuppressWarnings({"unchecked", "all"})
     public CacheErrorHandler errorHandler() {
         return new SimpleCacheErrorHandler() {
             @Override
             public void handleCacheGetError(RuntimeException exception, Cache cache, Object key) {
                 // 处理缓存读取错误
-                log.error("Cache Get Error: {}",exception.getMessage());
+                log.error("Cache Get Error: {}", exception.getMessage());
             }
+
             @Override
             public void handleCachePutError(RuntimeException exception, Cache cache, Object key, Object value) {
                 // 处理缓存写入错误
-                log.error("Cache Put Error: {}",exception.getMessage());
+                log.error("Cache Put Error: {}", exception.getMessage());
             }
+
             @Override
             public void handleCacheEvictError(RuntimeException exception, Cache cache, Object key) {
                 // 处理缓存删除错误
-                log.error("Cache Evict Error: {}",exception.getMessage());
+                log.error("Cache Evict Error: {}", exception.getMessage());
             }
+
             @Override
             public void handleCacheClearError(RuntimeException exception, Cache cache) {
                 // 处理缓存清除错误
-                log.error("Cache Clear Error: {}",exception.getMessage());
+                log.error("Cache Clear Error: {}", exception.getMessage());
             }
         };
     }
@@ -169,8 +174,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         }
 
         @Override
-        public byte[] serialize(T t) throws SerializationException
-        {
+        public byte[] serialize(T t) throws SerializationException {
             if (t == null) {
                 return new byte[0];
             }
@@ -178,8 +182,7 @@ public class RedisConfiguration extends CachingConfigurerSupport {
         }
 
         @Override
-        public T deserialize(byte[] bytes) throws SerializationException
-        {
+        public T deserialize(byte[] bytes) throws SerializationException {
             if (bytes == null || bytes.length == 0) {
                 return null;
             }

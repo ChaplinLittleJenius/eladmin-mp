@@ -30,10 +30,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "login")
 public class LoginProperties {
 
+    public static final String cacheKey = "user_login_cache:";
     /**
      * 账号单用户 登录
      */
     private boolean singleLogin = false;
-
-    public static final String cacheKey = "user_login_cache:";
 }

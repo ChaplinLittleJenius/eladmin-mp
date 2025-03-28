@@ -89,7 +89,7 @@ public class DateUtil {
      * 日期 格式化
      *
      * @param localDateTime /
-     * @param patten /
+     * @param patten        /
      * @return /
      */
     public static String localDateTimeFormat(LocalDateTime localDateTime, String patten) {
@@ -101,7 +101,7 @@ public class DateUtil {
      * 日期 格式化
      *
      * @param localDateTime /
-     * @param df /
+     * @param df            /
      * @return /
      */
     public static String localDateTimeFormat(LocalDateTime localDateTime, DateTimeFormatter df) {
@@ -120,20 +120,11 @@ public class DateUtil {
 
     /**
      * 获取当前时间
+     *
      * @return 、
      */
     public static Timestamp getTimeStamp() {
         return Timestamp.valueOf(LocalDateTime.now());
-    }
-
-    /**
-     * 日期格式化 yyyy-MM-dd
-     *
-     * @param localDateTime /
-     * @return /
-     */
-    public String localDateTimeFormatyMd(LocalDateTime localDateTime) {
-        return DFY_MD.format(localDateTime);
     }
 
     /**
@@ -165,5 +156,15 @@ public class DateUtil {
      */
     public static LocalDateTime parseLocalDateTimeFormatyMdHms(String localDateTime) {
         return LocalDateTime.from(DFY_MD_HMS.parse(localDateTime));
+    }
+
+    /**
+     * 日期格式化 yyyy-MM-dd
+     *
+     * @param localDateTime /
+     * @return /
+     */
+    public String localDateTimeFormatyMd(LocalDateTime localDateTime) {
+        return DFY_MD.format(localDateTime);
     }
 }

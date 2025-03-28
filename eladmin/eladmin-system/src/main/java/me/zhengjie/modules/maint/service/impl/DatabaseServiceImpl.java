@@ -36,9 +36,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -47,12 +47,12 @@ public class DatabaseServiceImpl extends ServiceImpl<DatabaseMapper, Database> i
     private final DatabaseMapper databaseMapper;
 
     @Override
-    public PageResult<Database> queryAll(DatabaseQueryCriteria criteria, Page<Object> page){
+    public PageResult<Database> queryAll(DatabaseQueryCriteria criteria, Page<Object> page) {
         return PageUtil.toPage(databaseMapper.findAll(criteria, page));
     }
 
     @Override
-    public List<Database> queryAll(DatabaseQueryCriteria criteria){
+    public List<Database> queryAll(DatabaseQueryCriteria criteria) {
         return databaseMapper.findAll(criteria);
     }
 
@@ -91,7 +91,7 @@ public class DatabaseServiceImpl extends ServiceImpl<DatabaseMapper, Database> i
     public void download(List<Database> databases, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Database database : databases) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("数据库名称", database.getName());
             map.put("数据库连接地址", database.getJdbcUrl());
             map.put("用户名", database.getUserName());

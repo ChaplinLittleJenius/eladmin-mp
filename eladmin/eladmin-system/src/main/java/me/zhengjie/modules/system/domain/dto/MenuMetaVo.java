@@ -18,6 +18,7 @@ package me.zhengjie.modules.system.domain.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+
 import java.io.Serializable;
 
 /**

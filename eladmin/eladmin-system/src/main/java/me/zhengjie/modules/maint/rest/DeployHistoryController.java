@@ -34,9 +34,9 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "运维：部署历史管理")
@@ -55,16 +55,16 @@ public class DeployHistoryController {
     @ApiOperation(value = "查询部署历史")
     @GetMapping
     @PreAuthorize("@el.check('deployHistory:list')")
-    public ResponseEntity<PageResult<DeployHistory>> queryDeployHistory(DeployHistoryQueryCriteria criteria){
+    public ResponseEntity<PageResult<DeployHistory>> queryDeployHistory(DeployHistoryQueryCriteria criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(deployhistoryService.queryAll(criteria, page),HttpStatus.OK);
+        return new ResponseEntity<>(deployhistoryService.queryAll(criteria, page), HttpStatus.OK);
     }
 
     @Log("删除DeployHistory")
     @ApiOperation(value = "删除部署历史")
     @DeleteMapping
     @PreAuthorize("@el.check('deployHistory:del')")
-    public ResponseEntity<Object> deleteDeployHistory(@RequestBody Set<String> ids){
+    public ResponseEntity<Object> deleteDeployHistory(@RequestBody Set<String> ids) {
         deployhistoryService.delete(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

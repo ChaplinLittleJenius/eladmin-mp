@@ -32,6 +32,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.stereotype.Component;
+
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 
@@ -42,10 +43,10 @@ import java.lang.reflect.Method;
 @Component
 public class LimitAspect {
 
-    private final RedisTemplate<Object,Object> redisTemplate;
     private static final Logger logger = LoggerFactory.getLogger(LimitAspect.class);
+    private final RedisTemplate<Object, Object> redisTemplate;
 
-    public LimitAspect(RedisTemplate<Object,Object> redisTemplate) {
+    public LimitAspect(RedisTemplate<Object, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
     }
 
@@ -69,7 +70,7 @@ public class LimitAspect {
             }
         }
 
-        ImmutableList<Object> keys = ImmutableList.of(StringUtils.join(limit.prefix(), "_", key, "_", request.getRequestURI().replace("/","_")));
+        ImmutableList<Object> keys = ImmutableList.of(StringUtils.join(limit.prefix(), "_", key, "_", request.getRequestURI().replace("/", "_")));
 
         String luaScript = buildLuaScript();
         RedisScript<Long> redisScript = new DefaultRedisScript<>(luaScript, Long.class);

@@ -12,11 +12,15 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        d.dict_id, d.name, d.description, d.create_by, d.update_by, d.create_time, d.update_time
+        d
+        .
+        dict_id
+        , d.name, d.description, d.create_by, d.update_by, d.create_time, d.update_time
     </sql>
 
     <select id="findAll" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List"/>
+        SELECT
+        <include refid="Base_Column_List"/>
         from sys_dict d
         <where>
             <if test="criteria.blurry != null and criteria.blurry != ''">

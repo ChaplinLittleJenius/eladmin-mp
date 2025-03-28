@@ -23,15 +23,16 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.modules.system.domain.Dept;
 import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.modules.system.domain.dto.DeptQueryCriteria;
+import me.zhengjie.modules.system.mapper.DeptMapper;
 import me.zhengjie.modules.system.mapper.RoleMapper;
 import me.zhengjie.modules.system.mapper.UserMapper;
-import me.zhengjie.modules.system.domain.dto.DeptQueryCriteria;
-import me.zhengjie.utils.*;
-import me.zhengjie.modules.system.mapper.DeptMapper;
 import me.zhengjie.modules.system.service.DeptService;
+import me.zhengjie.utils.*;
 import me.zhengjie.utils.enums.DataScopeEnum;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -40,9 +41,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-25
-*/
+ * @author Zheng Jie
+ * @date 2019-03-25
+ */
 @Service
 @RequiredArgsConstructor
 public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements DeptService {
@@ -56,16 +57,19 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public List<Dept> queryAll(DeptQueryCriteria criteria, Boolean isQuery) throws Exception {
         String dataScopeType = SecurityUtils.getDataScopeType();
         if (isQuery) {
-            if(dataScopeType.equals(DataScopeEnum.ALL.getValue())){
+            if (dataScopeType.equals(DataScopeEnum.ALL.getValue())) {
                 criteria.setPidIsNull(true);
             }
             List<Field> fields = StringUtils.getAllFields(criteria.getClass(), new ArrayList<>());
-            List<String> fieldNames = new ArrayList<String>(){{ add("pidIsNull");add("enabled");}};
+            List<String> fieldNames = new ArrayList<String>() {{
+                add("pidIsNull");
+                add("enabled");
+            }};
             for (Field field : fields) {
                 //设置对象的访问权限，保证对private的属性的访问
                 field.setAccessible(true);
                 Object val = field.get(criteria);
-                if(fieldNames.contains(field.getName())){
+                if (fieldNames.contains(field.getName())) {
                     continue;
                 }
                 if (ObjectUtil.isNotNull(val)) {
@@ -78,7 +82,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         criteria.setIds(SecurityUtils.getCurrentUserDataScope());
         List<Dept> list = deptMapper.findAll(criteria);
         // 如果为空，就代表为自定义权限或者本级权限，就需要去重，不理解可以注释掉，看查询结果
-        if(StringUtils.isBlank(dataScopeType)){
+        if (StringUtils.isBlank(dataScopeType)) {
             return deduplication(list);
         }
         return list;
@@ -88,7 +92,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public Dept findById(Long id) {
         String key = CacheKey.DEPT_ID + id;
         Dept dept = redisUtils.get(key, Dept.class);
-        if(dept == null){
+        if (dept == null) {
             dept = deptMapper.selectById(id);
             redisUtils.set(key, dept, 1, TimeUnit.DAYS);
         }
@@ -121,7 +125,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         // 旧的部门
         Long oldPid = findById(resources.getId()).getPid();
         Long newPid = resources.getPid();
-        if(resources.getPid() != null && resources.getId().equals(resources.getPid())) {
+        if (resources.getPid() != null && resources.getId().equals(resources.getPid())) {
             throw new BadRequestException("上级不能为自己");
         }
         Dept dept = getById(resources.getId());
@@ -149,7 +153,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public void download(List<Dept> depts, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Dept dept : depts) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("部门名称", dept.getName());
             map.put("部门状态", dept.getEnabled() ? "启用" : "停用");
             map.put("创建日期", dept.getCreateTime());
@@ -163,7 +167,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         for (Dept dept : menuList) {
             deptSet.add(dept);
             List<Dept> depts = deptMapper.findByPid(dept.getId());
-            if(CollUtil.isNotEmpty(depts)){
+            if (CollUtil.isNotEmpty(depts)) {
                 getDeleteDepts(depts, deptSet);
             }
         }
@@ -174,7 +178,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     public List<Long> getDeptChildren(List<Dept> deptList) {
         List<Long> list = new ArrayList<>();
         deptList.forEach(dept -> {
-                    if (dept!=null && dept.getEnabled()) {
+                    if (dept != null && dept.getEnabled()) {
                         List<Dept> depts = deptMapper.findByPid(dept.getId());
                         if (CollUtil.isNotEmpty(depts)) {
                             list.addAll(getDeptChildren(depts));
@@ -188,7 +192,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     @Override
     public List<Dept> getSuperior(Dept dept, List<Dept> depts) {
-        if(dept.getPid() == null){
+        if (dept.getPid() == null) {
             depts.addAll(deptMapper.findByPidIsNull());
             return depts;
         }
@@ -199,7 +203,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
     @Override
     public Object buildTree(List<Dept> deptList) {
         Set<Dept> trees = new LinkedHashSet<>();
-        Set<Dept> depts= new LinkedHashSet<>();
+        Set<Dept> depts = new LinkedHashSet<>();
         List<String> deptNames = deptList.stream().map(Dept::getName).collect(Collectors.toList());
         boolean isChild;
         for (Dept dept : deptList) {
@@ -216,9 +220,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
                     dept.getChildren().add(it);
                 }
             }
-            if(isChild) {
+            if (isChild) {
                 depts.add(dept);
-            } else if(dept.getPid() != null &&  !deptNames.contains(findById(dept.getPid()).getName())) {
+            } else if (dept.getPid() != null && !deptNames.contains(findById(dept.getPid()).getName())) {
                 depts.add(dept);
             }
         }
@@ -226,25 +230,25 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
         if (CollectionUtil.isEmpty(trees)) {
             trees = depts;
         }
-        Map<String,Object> map = new HashMap<>(2);
-        map.put("totalElements",depts.size());
-        map.put("content",CollectionUtil.isEmpty(trees)? depts :trees);
+        Map<String, Object> map = new HashMap<>(2);
+        map.put("totalElements", depts.size());
+        map.put("content", CollectionUtil.isEmpty(trees) ? depts : trees);
         return map;
     }
 
     @Override
     public void verification(Set<Dept> depts) {
         Set<Long> deptIds = depts.stream().map(Dept::getId).collect(Collectors.toSet());
-        if(userMapper.countByDepts(deptIds) > 0){
+        if (userMapper.countByDepts(deptIds) > 0) {
             throw new BadRequestException("所选部门存在用户关联，请解除后再试！");
         }
-        if(roleMapper.countByDepts(deptIds) > 0){
+        if (roleMapper.countByDepts(deptIds) > 0) {
             throw new BadRequestException("所选部门存在角色关联，请解除后再试！");
         }
     }
 
-    private void updateSubCnt(Long deptId){
-        if(deptId != null){
+    private void updateSubCnt(Long deptId) {
+        if (deptId != null) {
             int count = deptMapper.countByPid(deptId);
             deptMapper.updateSubCntById(count, deptId);
         }
@@ -260,7 +264,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
                     break;
                 }
             }
-            if (flag){
+            if (flag) {
                 depts.add(dept);
             }
         }
@@ -269,9 +273,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements De
 
     /**
      * 清理缓存
+     *
      * @param id /
      */
-    public void delCaches(Long id){
+    public void delCaches(Long id) {
         List<User> users = userMapper.findByRoleDeptId(id);
         // 删除数据权限
         redisUtils.delByKeys(CacheKey.DATA_USER, users.stream().map(User::getId).collect(Collectors.toSet()));

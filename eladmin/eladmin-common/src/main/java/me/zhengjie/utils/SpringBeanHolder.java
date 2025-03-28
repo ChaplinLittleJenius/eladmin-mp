@@ -22,6 +22,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,11 +32,11 @@ import java.util.List;
  * @date 2019-01-07
  */
 @Slf4j
-@SuppressWarnings({"unchecked","all"})
+@SuppressWarnings({"unchecked", "all"})
 public class SpringBeanHolder implements ApplicationContextAware, DisposableBean {
 
-    private static ApplicationContext applicationContext = null;
     private static final List<CallBack> CALL_BACKS = new ArrayList<>();
+    private static ApplicationContext applicationContext = null;
     private static boolean addCallback = true;
 
     /**
@@ -81,7 +82,8 @@ public class SpringBeanHolder implements ApplicationContextAware, DisposableBean
         T result = defaultValue;
         try {
             result = getBean(Environment.class).getProperty(property, requiredType);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
         return result;
     }
 
@@ -125,6 +127,16 @@ public class SpringBeanHolder implements ApplicationContextAware, DisposableBean
         applicationContext = null;
     }
 
+    /**
+     * 获取 @Service 的所有 bean 名称
+     *
+     * @return /
+     */
+    public static List<String> getAllServiceBeanName() {
+        return new ArrayList<>(Arrays.asList(applicationContext
+                .getBeanNamesForAnnotation(Service.class)));
+    }
+
     @Override
     public void destroy() {
         SpringBeanHolder.clearHolder();
@@ -145,15 +157,6 @@ public class SpringBeanHolder implements ApplicationContextAware, DisposableBean
         SpringBeanHolder.addCallback = false;
     }
 
-    /**
-     * 获取 @Service 的所有 bean 名称
-     * @return /
-     */
-    public static List<String> getAllServiceBeanName() {
-        return new ArrayList<>(Arrays.asList(applicationContext
-                .getBeanNamesForAnnotation(Service.class)));
-    }
-
     interface CallBack {
 
         /**
@@ -163,6 +166,7 @@ public class SpringBeanHolder implements ApplicationContextAware, DisposableBean
 
         /**
          * 本回调任务名称
+         *
          * @return /
          */
         default String getCallBackName() {

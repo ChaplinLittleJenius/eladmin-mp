@@ -25,6 +25,7 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.stereotype.Component;
+
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
  * @author /
  */
 @Component
-@SuppressWarnings({"unchecked","all"})
+@SuppressWarnings({"unchecked", "all"})
 public class RedisUtils {
     private static final Logger log = LoggerFactory.getLogger(RedisUtils.class);
 
@@ -197,9 +198,10 @@ public class RedisUtils {
 
     /**
      * 批量模糊删除key
+     *
      * @param pattern
      */
-    public void scanDel(String pattern){
+    public void scanDel(String pattern) {
         ScanOptions options = ScanOptions.scanOptions().match(pattern).build();
         try (Cursor<byte[]> cursor = redisTemplate.executeWithStickyConnection(
                 (RedisCallback<Cursor<byte[]>>) connection -> (Cursor<byte[]>) new ConvertingCursor<>(
@@ -243,7 +245,7 @@ public class RedisUtils {
     /**
      * 普通缓存获取
      *
-     * @param key 键
+     * @param key   键
      * @param clazz 列表中元素的类型
      * @return 值
      */
@@ -270,7 +272,7 @@ public class RedisUtils {
      * @return 值
      */
     public String getStr(String key) {
-        if(StrUtil.isBlank(key)){
+        if (StrUtil.isBlank(key)) {
             return null;
         }
         Object value = redisTemplate.opsForValue().get(key);
@@ -290,7 +292,7 @@ public class RedisUtils {
     public List<Object> multiGet(List<String> keys) {
         List list = redisTemplate.opsForValue().multiGet(Sets.newHashSet(keys));
         List resultList = Lists.newArrayList();
-        Optional.ofNullable(list).ifPresent(e-> list.forEach(ele-> Optional.ofNullable(ele).ifPresent(resultList::add)));
+        Optional.ofNullable(list).ifPresent(e -> list.forEach(ele -> Optional.ofNullable(ele).ifPresent(resultList::add)));
         return resultList;
     }
 
@@ -786,6 +788,7 @@ public class RedisUtils {
 
     /**
      * 递增
+     *
      * @param key
      * @return
      */
@@ -795,6 +798,7 @@ public class RedisUtils {
 
     /**
      * 递减
+     *
      * @param key
      * @return
      */

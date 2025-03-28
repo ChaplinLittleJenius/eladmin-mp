@@ -17,12 +17,14 @@ package me.zhengjie.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import javax.validation.constraints.NotBlank;
 import java.sql.Date;
 import java.sql.Timestamp;
 
 /**
  * 交易详情，按需应该存入数据库，这里存入数据库，仅供临时测试
+ *
  * @author Zheng Jie
  * @date 2018-12-31
  */

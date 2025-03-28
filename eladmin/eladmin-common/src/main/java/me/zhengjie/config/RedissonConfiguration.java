@@ -46,7 +46,7 @@ public class RedissonConfiguration {
                 .setTimeout(timeout)
                 .setConnectionPoolSize(connectionPoolSize)
                 .setConnectionMinimumIdleSize(connectionMinimumIdleSize);
-        if(StrUtil.isNotBlank(redisPassword)){
+        if (StrUtil.isNotBlank(redisPassword)) {
             config.useSingleServer().setPassword(redisPassword);
         }
         return Redisson.create(config);

@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 
@@ -33,7 +34,7 @@ import java.sql.Timestamp;
 @Setter
 @NoArgsConstructor
 @TableName("sys_log")
-public class SysLog  implements Serializable {
+public class SysLog implements Serializable {
 
     @TableId(value = "log_id", type = IdType.AUTO)
     private Long id;

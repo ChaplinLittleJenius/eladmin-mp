@@ -28,9 +28,9 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @Getter
 @Setter
 @TableName("mnt_deploy_history")
@@ -55,7 +55,7 @@ public class DeployHistory implements Serializable {
     @ApiModelProperty(value = "部署ID")
     private Long deployId;
 
-    public void copy(DeployHistory source){
-        BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
+    public void copy(DeployHistory source) {
+        BeanUtil.copyProperties(source, this, CopyOptions.create().setIgnoreNullValue(true));
     }
 }

@@ -17,13 +17,13 @@ package ${package}.domain.dto;
 
 import lombok.Data;
 <#if queryHasTimestamp>
-import java.sql.Timestamp;
+    import java.sql.Timestamp;
 </#if>
 <#if queryHasBigDecimal>
-import java.math.BigDecimal;
+    import java.math.BigDecimal;
 </#if>
 <#if betweens?? && (betweens?size > 0)>
-import java.util.List;
+    import java.util.List;
 </#if>
 import io.swagger.annotations.ApiModelProperty;
 
@@ -34,25 +34,25 @@ import io.swagger.annotations.ApiModelProperty;
 @Data
 public class ${className}QueryCriteria{
 
-    @ApiModelProperty(value = "页码", example = "1")
-    private Integer page = 1;
+@ApiModelProperty(value = "页码", example = "1")
+private Integer page = 1;
 
-    @ApiModelProperty(value = "每页数据量", example = "10")
-    private Integer size = 10;
+@ApiModelProperty(value = "每页数据量", example = "10")
+private Integer size = 10;
 <#if queryColumns??>
     <#list queryColumns as column>
 
         <#if column.remark != ''>
-    @ApiModelProperty(value = "${column.remark}")
+            @ApiModelProperty(value = "${column.remark}")
         <#else>
-    @ApiModelProperty(value = "${column.changeColumnName}")
+            @ApiModelProperty(value = "${column.changeColumnName}")
         </#if>
-    private ${column.columnType} ${column.changeColumnName};
+        private ${column.columnType} ${column.changeColumnName};
     </#list>
 </#if>
 <#if betweens??>
     <#list betweens as column>
-    private List<${column.columnType}> ${column.changeColumnName};
+        private List<${column.columnType}> ${column.changeColumnName};
     </#list>
 </#if>
 }

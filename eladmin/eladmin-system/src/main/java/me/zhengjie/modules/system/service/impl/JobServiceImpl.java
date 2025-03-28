@@ -21,22 +21,23 @@ import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
 import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.domain.Job;
-import me.zhengjie.modules.system.mapper.UserMapper;
 import me.zhengjie.modules.system.domain.dto.JobQueryCriteria;
-import me.zhengjie.utils.*;
 import me.zhengjie.modules.system.mapper.JobMapper;
+import me.zhengjie.modules.system.mapper.UserMapper;
 import me.zhengjie.modules.system.service.JobService;
+import me.zhengjie.utils.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-29
-*/
+ * @author Zheng Jie
+ * @date 2019-03-29
+ */
 @Service
 @RequiredArgsConstructor
 public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobService {
@@ -59,7 +60,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     public Job findById(Long id) {
         String key = CacheKey.JOB_ID + id;
         Job job = redisUtils.get(key, Job.class);
-        if(job == null){
+        if (job == null) {
             job = getById(id);
             redisUtils.set(key, job, 1, TimeUnit.DAYS);
         }
@@ -70,8 +71,8 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     @Transactional(rollbackFor = Exception.class)
     public void create(Job resources) {
         Job job = jobMapper.findByName(resources.getName());
-        if(job != null){
-            throw new EntityExistException(Job.class,"name",resources.getName());
+        if (job != null) {
+            throw new EntityExistException(Job.class, "name", resources.getName());
         }
         save(resources);
     }
@@ -81,8 +82,8 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     public void update(Job resources) {
         Job job = getById(resources.getId());
         Job old = jobMapper.findByName(resources.getName());
-        if(old != null && !old.getId().equals(resources.getId())){
-            throw new EntityExistException(Job.class,"name",resources.getName());
+        if (old != null && !old.getId().equals(resources.getId())) {
+            throw new EntityExistException(Job.class, "name", resources.getName());
         }
         resources.setId(job.getId());
         saveOrUpdate(resources);
@@ -102,7 +103,7 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
     public void download(List<Job> jobs, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Job job : jobs) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("岗位名称", job.getName());
             map.put("岗位状态", job.getEnabled() ? "启用" : "停用");
             map.put("创建日期", job.getCreateTime());
@@ -113,12 +114,12 @@ public class JobServiceImpl extends ServiceImpl<JobMapper, Job> implements JobSe
 
     @Override
     public void verification(Set<Long> ids) {
-        if(userMapper.countByJobs(ids) > 0){
+        if (userMapper.countByJobs(ids) > 0) {
             throw new BadRequestException("所选的岗位中存在用户关联，请解除关联再试！");
         }
     }
 
-    public void delCaches(Long id){
+    public void delCaches(Long id) {
         redisUtils.del(CacheKey.JOB_ID + id);
     }
 }

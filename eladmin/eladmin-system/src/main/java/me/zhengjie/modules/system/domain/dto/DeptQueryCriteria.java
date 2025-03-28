@@ -17,15 +17,16 @@ package me.zhengjie.modules.system.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import java.sql.Timestamp;
 import java.util.List;
 
 /**
-* @author Zheng Jie
-* @date 2019-03-25
-*/
+ * @author Zheng Jie
+ * @date 2019-03-25
+ */
 @Data
-public class DeptQueryCriteria{
+public class DeptQueryCriteria {
 
     @ApiModelProperty(value = "部门id集合")
     private List<Long> ids;

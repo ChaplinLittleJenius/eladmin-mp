@@ -22,11 +22,11 @@ import java.sql.Timestamp;
 import java.util.List;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @Data
-public class AppQueryCriteria{
+public class AppQueryCriteria {
 
     @ApiModelProperty(value = "名称")
     private String name;

@@ -21,6 +21,7 @@ import me.zhengjie.domain.SysLog;
 import me.zhengjie.domain.dto.SysLogQueryCriteria;
 import me.zhengjie.utils.PageResult;
 import org.aspectj.lang.ProceedingJoinPoint;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
@@ -29,7 +30,7 @@ import java.util.List;
  * @author Zheng Jie
  * @date 2018-11-24
  */
-public interface SysLogService extends IService<SysLog>{
+public interface SysLogService extends IService<SysLog> {
 
     /**
      * 分页查询
@@ -42,6 +43,7 @@ public interface SysLogService extends IService<SysLog>{
 
     /**
      * 查询全部数据
+     *
      * @param criteria 查询条件
      * @return /
      */
@@ -49,24 +51,27 @@ public interface SysLogService extends IService<SysLog>{
 
     /**
      * 查询用户日志
+     *
      * @param criteria 查询条件
-     * @param page 分页参数
+     * @param page     分页参数
      * @return -
      */
     PageResult<SysLog> queryAllByUser(SysLogQueryCriteria criteria, Page<SysLog> page);
 
     /**
      * 保存日志数据
-     * @param username 用户
-     * @param browser 浏览器
-     * @param ip 请求IP
+     *
+     * @param username  用户
+     * @param browser   浏览器
+     * @param ip        请求IP
      * @param joinPoint /
-     * @param sysLog 日志实体
+     * @param sysLog    日志实体
      */
     void save(String username, String browser, String ip, ProceedingJoinPoint joinPoint, SysLog sysLog);
 
     /**
      * 查询异常详情
+     *
      * @param id 日志ID
      * @return Object
      */
@@ -74,7 +79,8 @@ public interface SysLogService extends IService<SysLog>{
 
     /**
      * 导出日志
-     * @param sysLogs 待导出的数据
+     *
+     * @param sysLogs  待导出的数据
      * @param response /
      * @throws IOException /
      */

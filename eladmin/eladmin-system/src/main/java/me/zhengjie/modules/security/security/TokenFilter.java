@@ -18,12 +18,13 @@ package me.zhengjie.modules.security.security;
 import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import me.zhengjie.modules.security.config.SecurityProperties;
-import me.zhengjie.modules.security.service.dto.OnlineUserDto;
 import me.zhengjie.modules.security.service.OnlineUserService;
+import me.zhengjie.modules.security.service.dto.OnlineUserDto;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -57,7 +58,7 @@ public class TokenFilter extends GenericFilterBean {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String token = resolveToken(httpServletRequest);
         // 对于 Token 为空的不需要去查 Redis
-        if(StrUtil.isNotBlank(token)){
+        if (StrUtil.isNotBlank(token)) {
             // 获取用户Token的Key
             String loginKey = tokenProvider.loginKey(token);
             OnlineUserDto onlineUserDto = onlineUserService.getOne(loginKey);

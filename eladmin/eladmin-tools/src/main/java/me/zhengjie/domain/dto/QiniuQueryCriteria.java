@@ -17,6 +17,7 @@ package me.zhengjie.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import java.util.List;
  * @date 2019-6-4 09:54:37
  */
 @Data
-public class QiniuQueryCriteria{
+public class QiniuQueryCriteria {
 
     @ApiModelProperty(value = "名称查询")
     private String key;

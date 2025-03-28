@@ -16,13 +16,12 @@
 package me.zhengjie.modules.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import me.zhengjie.modules.system.domain.Role;
 import me.zhengjie.modules.system.domain.dto.RoleQueryCriteria;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+
 import java.util.List;
 import java.util.Set;
 

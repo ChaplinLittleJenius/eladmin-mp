@@ -27,6 +27,7 @@ public class BigDecimalUtils {
 
     /**
      * 将对象转换为 BigDecimal
+     *
      * @param obj 输入对象
      * @return 转换后的 BigDecimal
      */
@@ -46,6 +47,7 @@ public class BigDecimalUtils {
 
     /**
      * 加法
+     *
      * @param a 加数
      * @param b 加数
      * @return 两个加数的和，保留两位小数
@@ -58,6 +60,7 @@ public class BigDecimalUtils {
 
     /**
      * 减法
+     *
      * @param a 被减数
      * @param b 减数
      * @return 两数的差，保留两位小数
@@ -70,6 +73,7 @@ public class BigDecimalUtils {
 
     /**
      * 乘法
+     *
      * @param a 乘数
      * @param b 乘数
      * @return 两个乘数的积，保留两位小数
@@ -82,6 +86,7 @@ public class BigDecimalUtils {
 
     /**
      * 除法
+     *
      * @param a 被除数
      * @param b 除数
      * @return 两数的商，保留两位小数
@@ -94,8 +99,9 @@ public class BigDecimalUtils {
 
     /**
      * 除法
-     * @param a 被除数
-     * @param b 除数
+     *
+     * @param a     被除数
+     * @param b     除数
      * @param scale 保留小数位数
      * @return 两数的商，保留两位小数
      */
@@ -107,6 +113,7 @@ public class BigDecimalUtils {
 
     /**
      * 分转元
+     *
      * @param obj 分的金额
      * @return 转换后的元，保留两位小数
      */
@@ -117,6 +124,7 @@ public class BigDecimalUtils {
 
     /**
      * 元转分
+     *
      * @param obj 元的金额
      * @return 转换后的分
      */
@@ -124,7 +132,7 @@ public class BigDecimalUtils {
         BigDecimal yuan = toBigDecimal(obj);
         return yuan.multiply(BigDecimal.valueOf(100)).setScale(0, RoundingMode.HALF_UP).longValue();
     }
-    
+
     public static void main(String[] args) {
         BigDecimal num1 = new BigDecimal("10.123");
         BigDecimal num2 = new BigDecimal("2.456");

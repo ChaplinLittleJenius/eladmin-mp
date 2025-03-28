@@ -19,9 +19,9 @@ import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import me.zhengjie.modules.system.domain.User;
 import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;

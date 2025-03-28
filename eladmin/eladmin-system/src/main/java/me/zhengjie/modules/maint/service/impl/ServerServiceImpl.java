@@ -35,9 +35,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @Service
 @RequiredArgsConstructor
 public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> implements ServerService {
@@ -46,12 +46,12 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
     private final DeployServerMapper deployServerMapper;
 
     @Override
-    public PageResult<Server> queryAll(ServerQueryCriteria criteria, Page<Object> page){
+    public PageResult<Server> queryAll(ServerQueryCriteria criteria, Page<Object> page) {
         return PageUtil.toPage(serverMapper.findAll(criteria, page));
     }
 
     @Override
-    public List<Server> queryAll(ServerQueryCriteria criteria){
+    public List<Server> queryAll(ServerQueryCriteria criteria) {
         return serverMapper.findAll(criteria);
     }
 
@@ -64,11 +64,11 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
     public Boolean testConnect(Server resources) {
         ExecuteShellUtil executeShellUtil = null;
         try {
-            executeShellUtil = new ExecuteShellUtil(resources.getIp(), resources.getAccount(), resources.getPassword(),resources.getPort());
-            return executeShellUtil.execute("ls")==0;
+            executeShellUtil = new ExecuteShellUtil(resources.getIp(), resources.getAccount(), resources.getPassword(), resources.getPort());
+            return executeShellUtil.execute("ls") == 0;
         } catch (Exception e) {
             return false;
-        }finally {
+        } finally {
             if (executeShellUtil != null) {
                 executeShellUtil.close();
             }
@@ -101,7 +101,7 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
     public void download(List<Server> servers, HttpServletResponse response) throws IOException {
         List<Map<String, Object>> list = new ArrayList<>();
         for (Server deploy : servers) {
-            Map<String,Object> map = new LinkedHashMap<>();
+            Map<String, Object> map = new LinkedHashMap<>();
             map.put("服务器名称", deploy.getName());
             map.put("服务器IP", deploy.getIp());
             map.put("端口", deploy.getPort());

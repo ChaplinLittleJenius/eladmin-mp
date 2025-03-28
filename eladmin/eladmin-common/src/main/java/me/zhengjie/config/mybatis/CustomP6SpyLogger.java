@@ -36,19 +36,20 @@ public class CustomP6SpyLogger implements MessageFormattingStrategy {
 
     /**
      * 格式化 sql
+     *
      * @param connectionId 连接id
-     * @param now 当前时间
-     * @param elapsed 执行时长
-     * @param category sql分类
-     * @param prepared 预编译sql
-     * @param sql 执行sql
-     * @param url 数据库连接url
+     * @param now          当前时间
+     * @param elapsed      执行时长
+     * @param category     sql分类
+     * @param prepared     预编译sql
+     * @param sql          执行sql
+     * @param url          数据库连接url
      * @return 格式化后的sql
      */
     @Override
     public String formatMessage(int connectionId, String now, long elapsed, String category, String prepared, String sql, String url) {
         // 去掉换行和多余空格
-        if(StrUtil.isNotBlank(sql)){
+        if (StrUtil.isNotBlank(sql)) {
             sql = sql.replaceAll("\\s+", " ").trim();
         }
 

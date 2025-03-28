@@ -17,11 +17,13 @@ package me.zhengjie.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import java.sql.Timestamp;
 import java.util.List;
 
 /**
  * 日志查询类
+ *
  * @author Zheng Jie
  * @date 2019-6-4 09:23:07
  */

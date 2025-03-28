@@ -35,9 +35,9 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @RestController
 @RequiredArgsConstructor
 @Api(tags = "运维：应用管理")
@@ -56,16 +56,16 @@ public class AppController {
     @ApiOperation(value = "查询应用")
     @GetMapping
     @PreAuthorize("@el.check('app:list')")
-    public ResponseEntity<PageResult<App>> queryApp(AppQueryCriteria criteria){
+    public ResponseEntity<PageResult<App>> queryApp(AppQueryCriteria criteria) {
         Page<Object> page = new Page<>(criteria.getPage(), criteria.getSize());
-        return new ResponseEntity<>(appService.queryAll(criteria, page),HttpStatus.OK);
+        return new ResponseEntity<>(appService.queryAll(criteria, page), HttpStatus.OK);
     }
 
     @Log("新增应用")
     @ApiOperation(value = "新增应用")
     @PostMapping
     @PreAuthorize("@el.check('app:add')")
-    public ResponseEntity<Object> createApp(@Validated @RequestBody App resources){
+    public ResponseEntity<Object> createApp(@Validated @RequestBody App resources) {
         appService.create(resources);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -74,7 +74,7 @@ public class AppController {
     @ApiOperation(value = "修改应用")
     @PutMapping
     @PreAuthorize("@el.check('app:edit')")
-    public ResponseEntity<Object> updateApp(@Validated @RequestBody App resources){
+    public ResponseEntity<Object> updateApp(@Validated @RequestBody App resources) {
         appService.update(resources);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
@@ -83,7 +83,7 @@ public class AppController {
     @ApiOperation(value = "删除应用")
     @DeleteMapping
     @PreAuthorize("@el.check('app:del')")
-    public ResponseEntity<Object> deleteApp(@RequestBody Set<Long> ids){
+    public ResponseEntity<Object> deleteApp(@RequestBody Set<Long> ids) {
         appService.delete(ids);
         return new ResponseEntity<>(HttpStatus.OK);
     }

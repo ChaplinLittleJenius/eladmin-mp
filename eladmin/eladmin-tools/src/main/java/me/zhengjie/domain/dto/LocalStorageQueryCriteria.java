@@ -17,15 +17,16 @@ package me.zhengjie.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import java.sql.Timestamp;
 import java.util.List;
 
 /**
-* @author Zheng Jie
-* @date 2019-09-05
-*/
+ * @author Zheng Jie
+ * @date 2019-09-05
+ */
 @Data
-public class LocalStorageQueryCriteria{
+public class LocalStorageQueryCriteria {
 
     @ApiModelProperty(value = "模糊查询")
     private String blurry;

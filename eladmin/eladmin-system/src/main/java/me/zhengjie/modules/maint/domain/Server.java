@@ -29,9 +29,9 @@ import java.io.Serializable;
 import java.util.Objects;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @Getter
 @Setter
 @TableName("mnt_server")
@@ -56,8 +56,8 @@ public class Server extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "密码")
     private String password;
 
-    public void copy(Server source){
-        BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
+    public void copy(Server source) {
+        BeanUtil.copyProperties(source, this, CopyOptions.create().setIgnoreNullValue(true));
     }
 
     @Override

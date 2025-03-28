@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
+
 import java.util.*;
 
 /**
@@ -33,10 +34,11 @@ public class AnonTagUtils {
 
     /**
      * 获取匿名标记的URL
+     *
      * @param applicationContext /
      * @return /
      */
-    public static Map<String, Set<String>> getAnonymousUrl(ApplicationContext applicationContext){
+    public static Map<String, Set<String>> getAnonymousUrl(ApplicationContext applicationContext) {
         RequestMappingHandlerMapping requestMappingHandlerMapping = (RequestMappingHandlerMapping) applicationContext.getBean("requestMappingHandlerMapping");
         Map<RequestMappingInfo, HandlerMethod> handlerMethodMap = requestMappingHandlerMapping.getHandlerMethods();
         Map<String, Set<String>> anonymousUrls = new HashMap<>(8);
@@ -53,7 +55,7 @@ public class AnonTagUtils {
             if (null != anonymousAccess) {
                 List<RequestMethod> requestMethods = new ArrayList<>(infoEntry.getKey().getMethodsCondition().getMethods());
                 RequestMethodEnum request = RequestMethodEnum.find(requestMethods.isEmpty() ? RequestMethodEnum.ALL.getType() : requestMethods.get(0).name());
-                if (infoEntry.getKey().getPatternsCondition()!=null) {
+                if (infoEntry.getKey().getPatternsCondition() != null) {
                     switch (Objects.requireNonNull(request)) {
                         case GET:
                             get.addAll(infoEntry.getKey().getPatternsCondition().getPatterns());
@@ -88,10 +90,11 @@ public class AnonTagUtils {
 
     /**
      * 获取所有匿名标记的URL
+     *
      * @param applicationContext /
      * @return /
      */
-    public static Set<String> getAllAnonymousUrl(ApplicationContext applicationContext){
+    public static Set<String> getAllAnonymousUrl(ApplicationContext applicationContext) {
         Set<String> allUrl = new HashSet<>();
         Map<String, Set<String>> anonymousUrls = getAnonymousUrl(applicationContext);
         for (String key : anonymousUrls.keySet()) {

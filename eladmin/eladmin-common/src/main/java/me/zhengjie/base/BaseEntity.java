@@ -24,12 +24,14 @@ import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
+
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 
 /**
  * 通用字段， is_del 根据需求自行添加
+ *
  * @author Zheng Jie
  * @date 2019年10月24日20:46:32
  */
@@ -57,12 +59,6 @@ public class BaseEntity implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp updateTime;
 
-    /* 分组校验 */
-    public @interface Create {}
-
-    /* 分组校验 */
-    public @interface Update {}
-
     @Override
     public String toString() {
         ToStringBuilder builder = new ToStringBuilder(this);
@@ -76,5 +72,13 @@ public class BaseEntity implements Serializable {
             builder.append("toString builder encounter an error");
         }
         return builder.toString();
+    }
+
+    /* 分组校验 */
+    public @interface Create {
+    }
+
+    /* 分组校验 */
+    public @interface Update {
     }
 }

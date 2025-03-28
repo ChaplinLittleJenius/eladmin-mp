@@ -22,21 +22,22 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.modules.system.domain.Dict;
 import me.zhengjie.modules.system.domain.DictDetail;
-import me.zhengjie.modules.system.mapper.DictDetailMapper;
 import me.zhengjie.modules.system.domain.dto.DictQueryCriteria;
-import me.zhengjie.utils.*;
+import me.zhengjie.modules.system.mapper.DictDetailMapper;
 import me.zhengjie.modules.system.mapper.DictMapper;
 import me.zhengjie.modules.system.service.DictService;
+import me.zhengjie.utils.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
 
 /**
-* @author Zheng Jie
-* @date 2019-04-10
-*/
+ * @author Zheng Jie
+ * @date 2019-04-10
+ */
 @Service
 @RequiredArgsConstructor
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements DictService {
@@ -47,7 +48,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
     private final DictDetailMapper dictDetailMapper;
 
     @Override
-    public PageResult<Dict> queryAll(DictQueryCriteria criteria, Page<Object> page){
+    public PageResult<Dict> queryAll(DictQueryCriteria criteria, Page<Object> page) {
         IPage<Dict> dicts = dictMapper.findAll(criteria, page);
         return PageUtil.toPage(dicts);
     }
@@ -93,9 +94,9 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         List<Map<String, Object>> list = new ArrayList<>();
         for (Dict dict : dicts) {
             List<DictDetail> dictDetails = dictDetailMapper.findByDictName(dict.getName());
-            if(CollectionUtil.isNotEmpty(dictDetails)){
+            if (CollectionUtil.isNotEmpty(dictDetails)) {
                 for (DictDetail dictDetail : dictDetails) {
-                    Map<String,Object> map = new LinkedHashMap<>();
+                    Map<String, Object> map = new LinkedHashMap<>();
                     map.put("字典名称", dict.getName());
                     map.put("字典描述", dict.getDescription());
                     map.put("字典标签", dictDetail.getLabel());
@@ -104,7 +105,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
                     list.add(map);
                 }
             } else {
-                Map<String,Object> map = new LinkedHashMap<>();
+                Map<String, Object> map = new LinkedHashMap<>();
                 map.put("字典名称", dict.getName());
                 map.put("字典描述", dict.getDescription());
                 map.put("字典标签", null);
@@ -116,7 +117,7 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict> implements Di
         FileUtil.downloadExcel(list, response);
     }
 
-    public void delCaches(Dict dict){
+    public void delCaches(Dict dict) {
         redisUtils.del(CacheKey.DICT_NAME + dict.getName());
     }
 }

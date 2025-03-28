@@ -24,6 +24,7 @@ import me.zhengjie.exception.BadRequestException;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.xssf.streaming.SXSSFSheet;
 import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +33,10 @@ import java.nio.file.Files;
 import java.security.MessageDigest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -57,6 +61,11 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * </pre>
      */
     public static final String SYS_TEM_DIR = System.getProperty("java.io.tmpdir") + File.separator;
+    public static final String IMAGE = "图片";
+    public static final String TXT = "文档";
+    public static final String MUSIC = "音乐";
+    public static final String VIDEO = "视频";
+    public static final String OTHER = "其他";
     /**
      * 定义GB的计算常量
      */
@@ -69,18 +78,10 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
      * 定义KB的计算常量
      */
     private static final int KB = 1024;
-
     /**
      * 格式化小数
      */
     private static final DecimalFormat DF = new DecimalFormat("0.00");
-
-    public static final String IMAGE = "图片";
-    public static final String TXT = "文档";
-    public static final String MUSIC = "音乐";
-    public static final String VIDEO = "视频";
-    public static final String OTHER = "其他";
-
 
     /**
      * MultipartFile转File
@@ -151,7 +152,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     /**
      * inputStream 转 File
      */
-    static File inputStreamToFile(InputStream ins, String name){
+    static File inputStreamToFile(InputStream ins, String name) {
         File file = new File(SYS_TEM_DIR + name);
         if (file.exists()) {
             return file;
@@ -230,7 +231,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
         }).collect(Collectors.toList());
         // 一次性写出内容，使用默认样式，强制输出标题
         writer.write(sanitizedList, true);
-        SXSSFSheet sheet = (SXSSFSheet)writer.getSheet();
+        SXSSFSheet sheet = (SXSSFSheet) writer.getSheet();
         //上面需要强转SXSSFSheet  不然没有trackAllColumnsForAutoSizing方法
         sheet.trackAllColumnsForAutoSizing();
         //列宽自适应
@@ -279,7 +280,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
     public static boolean check(File file1, File file2) {
         String img1Md5 = getMd5(file1);
         String img2Md5 = getMd5(file2);
-        if(img1Md5 != null){
+        if (img1Md5 != null) {
             return img1Md5.equals(img2Md5);
         }
         return false;
@@ -368,6 +369,7 @@ public class FileUtil extends cn.hutool.core.io.FileUtil {
 
     /**
      * 验证并过滤非法的文件名
+     *
      * @param fileName 文件名
      * @return 文件名
      */

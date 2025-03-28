@@ -32,38 +32,38 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 
 @Getter
 @Setter
 @TableName("mnt_deploy")
 public class Deploy extends BaseEntity implements Serializable {
 
-	@TableId(value = "deploy_id", type = IdType.AUTO)
-	@ApiModelProperty(value = "ID", hidden = true)
+    @TableId(value = "deploy_id", type = IdType.AUTO)
+    @ApiModelProperty(value = "ID", hidden = true)
     private Long id;
 
-	@ApiModelProperty(value = "应用编号")
-	private Long appId;
+    @ApiModelProperty(value = "应用编号")
+    private Long appId;
 
-	@TableField(exist = false)
-	@ApiModelProperty(name = "服务器", hidden = true)
-	private Set<Server> deploys;
+    @TableField(exist = false)
+    @ApiModelProperty(name = "服务器", hidden = true)
+    private Set<Server> deploys;
 
-	@TableField(exist = false)
-	@ApiModelProperty(value = "应用")
+    @TableField(exist = false)
+    @ApiModelProperty(value = "应用")
     private App app;
 
-    public void copy(Deploy source){
-        BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
+    public void copy(Deploy source) {
+        BeanUtil.copyProperties(source, this, CopyOptions.create().setIgnoreNullValue(true));
     }
 
-	public String getServers() {
-		if(CollectionUtil.isNotEmpty(deploys)){
-			return deploys.stream().map(Server::getName).collect(Collectors.joining(","));
-		}
-		return "";
-	}
+    public String getServers() {
+        if (CollectionUtil.isNotEmpty(deploys)) {
+            return deploys.stream().map(Server::getName).collect(Collectors.joining(","));
+        }
+        return "";
+    }
 }

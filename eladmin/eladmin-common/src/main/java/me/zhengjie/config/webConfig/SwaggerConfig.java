@@ -27,17 +27,14 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfoHandlerMapping;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.ApiKey;
-import springfox.documentation.service.AuthorizationScope;
-import springfox.documentation.service.SecurityReference;
-import springfox.documentation.service.SecurityScheme;
+import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.spring.web.plugins.WebFluxRequestHandlerProvider;
 import springfox.documentation.spring.web.plugins.WebMvcRequestHandlerProvider;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +44,7 @@ import java.util.stream.Collectors;
 
 /**
  * api页面 /doc.html
+ *
  * @author Zheng Jie
  * @date 2018-11-23
  */
@@ -55,16 +53,54 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class SwaggerConfig {
 
+    private final ApplicationContext applicationContext;
     @Value("${server.servlet.context-path:}")
     private String apiPath;
-
     @Value("${jwt.header}")
     private String tokenHeader;
-
     @Value("${swagger.enabled}")
     private Boolean enabled;
 
-    private final ApplicationContext applicationContext;
+    /**
+     * 解决Springfox与SpringBoot集成后，WebMvcRequestHandlerProvider和WebFluxRequestHandlerProvider冲突问题
+     *
+     * @return /
+     */
+    @Bean
+    @SuppressWarnings({"unchecked", "all"})
+    public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
+        return new BeanPostProcessor() {
+
+            @Override
+            public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+                if (bean instanceof WebMvcRequestHandlerProvider || bean instanceof WebFluxRequestHandlerProvider) {
+                    customizeSpringfoxHandlerMappings(getHandlerMappings(bean));
+                }
+                return bean;
+            }
+
+            private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(List<T> mappings) {
+                List<T> filteredMappings = mappings.stream()
+                        .filter(mapping -> mapping.getPatternParser() == null)
+                        .collect(Collectors.toList());
+                mappings.clear();
+                mappings.addAll(filteredMappings);
+            }
+
+            private List<RequestMappingInfoHandlerMapping> getHandlerMappings(Object bean) {
+                Field field = ReflectionUtils.findField(bean.getClass(), "handlerMappings");
+                if (field != null) {
+                    field.setAccessible(true);
+                    try {
+                        return (List<RequestMappingInfoHandlerMapping>) field.get(bean);
+                    } catch (IllegalAccessException e) {
+                        throw new IllegalStateException("Failed to access handlerMappings field", e);
+                    }
+                }
+                return Collections.emptyList();
+            }
+        };
+    }
 
     @Bean
     public Docket createRestApi() {
@@ -110,7 +146,7 @@ public class SwaggerConfig {
         String regExp = "^(?!" + apiPath + String.join("|" + apiPath, urls) + ").*$";
         return SecurityContext.builder()
                 .securityReferences(defaultAuth())
-                .operationSelector(o->o.requestMappingPattern()
+                .operationSelector(o -> o.requestMappingPattern()
                         // 排除不需要认证的接口
                         .matches(regExp))
                 .build();
@@ -123,45 +159,5 @@ public class SwaggerConfig {
         authorizationScopes[0] = authorizationScope;
         securityReferences.add(new SecurityReference(tokenHeader, authorizationScopes));
         return securityReferences;
-    }
-
-    /**
-     * 解决Springfox与SpringBoot集成后，WebMvcRequestHandlerProvider和WebFluxRequestHandlerProvider冲突问题
-     * @return /
-     */
-    @Bean
-    @SuppressWarnings({"unchecked","all"})
-    public static BeanPostProcessor springfoxHandlerProviderBeanPostProcessor() {
-        return new BeanPostProcessor() {
-
-            @Override
-            public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-                if (bean instanceof WebMvcRequestHandlerProvider || bean instanceof WebFluxRequestHandlerProvider) {
-                    customizeSpringfoxHandlerMappings(getHandlerMappings(bean));
-                }
-                return bean;
-            }
-
-            private <T extends RequestMappingInfoHandlerMapping> void customizeSpringfoxHandlerMappings(List<T> mappings) {
-                List<T> filteredMappings = mappings.stream()
-                        .filter(mapping -> mapping.getPatternParser() == null)
-                        .collect(Collectors.toList());
-                mappings.clear();
-                mappings.addAll(filteredMappings);
-            }
-
-            private List<RequestMappingInfoHandlerMapping> getHandlerMappings(Object bean) {
-                Field field = ReflectionUtils.findField(bean.getClass(), "handlerMappings");
-                if (field != null) {
-                    field.setAccessible(true);
-                    try {
-                        return (List<RequestMappingInfoHandlerMapping>) field.get(bean);
-                    } catch (IllegalAccessException e) {
-                        throw new IllegalStateException("Failed to access handlerMappings field", e);
-                    }
-                }
-                return Collections.emptyList();
-            }
-        };
     }
 }

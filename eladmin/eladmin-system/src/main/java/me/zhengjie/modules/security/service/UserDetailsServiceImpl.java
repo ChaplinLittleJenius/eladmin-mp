@@ -26,6 +26,7 @@ import me.zhengjie.modules.system.service.RoleService;
 import me.zhengjie.modules.system.service.UserService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public JwtUserDto loadUserByUsername(String username) {
         JwtUserDto jwtUserDto = userCacheManager.getUserCache(username);
-        if(jwtUserDto == null){
+        if (jwtUserDto == null) {
             User user = userService.getLoginData(username);
             if (user == null) {
                 throw new BadRequestException("用户不存在");

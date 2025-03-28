@@ -28,9 +28,9 @@ import me.zhengjie.base.BaseEntity;
 import java.io.Serializable;
 
 /**
-* @author zhanghouying
-* @date 2019-08-24
-*/
+ * @author zhanghouying
+ * @date 2019-08-24
+ */
 @Getter
 @Setter
 @TableName("mnt_database")
@@ -52,7 +52,7 @@ public class Database extends BaseEntity implements Serializable {
     @ApiModelProperty(value = "用户名")
     private String userName;
 
-    public void copy(Database source){
-        BeanUtil.copyProperties(source,this, CopyOptions.create().setIgnoreNullValue(true));
+    public void copy(Database source) {
+        BeanUtil.copyProperties(source, this, CopyOptions.create().setIgnoreNullValue(true));
     }
 }

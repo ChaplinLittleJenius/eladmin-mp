@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 允许在查询字符串中使用特定的特殊字符
+ *
  * @author bearBoy80
  */
 @Configuration(proxyBeanMethods = false)

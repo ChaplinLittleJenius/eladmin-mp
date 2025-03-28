@@ -29,12 +29,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Objects;
 
 /**
  * 获取当前登录的用户
+ *
  * @author Zheng Jie
  * @date 2019-01-17
  */
@@ -46,18 +48,9 @@ public class SecurityUtils {
 
     public static String tokenStartWith;
 
-    @Value("${jwt.header}")
-    public void setHeader(String header) {
-        SecurityUtils.header = header;
-    }
-
-    @Value("${jwt.token-start-with}")
-    public void setTokenStartWith(String tokenStartWith) {
-        SecurityUtils.tokenStartWith = tokenStartWith;
-    }
-
     /**
      * 获取当前登录的用户
+     *
      * @return UserDetails
      */
     public static UserDetails getCurrentUser() {
@@ -67,9 +60,10 @@ public class SecurityUtils {
 
     /**
      * 获取当前用户的数据权限
+     *
      * @return /
      */
-    public static List<Long> getCurrentUserDataScope(){
+    public static List<Long> getCurrentUserDataScope() {
         UserDetails userDetails = getCurrentUser();
         // 将 Java 对象转换为 JSONObject 对象
         JSONObject jsonObject = (JSONObject) JSON.toJSON(userDetails);
@@ -79,11 +73,12 @@ public class SecurityUtils {
 
     /**
      * 获取数据权限级别
+     *
      * @return 级别
      */
     public static String getDataScopeType() {
         List<Long> dataScopes = getCurrentUserDataScope();
-        if(CollUtil.isEmpty(dataScopes)){
+        if (CollUtil.isEmpty(dataScopes)) {
             return "";
         }
         return DataScopeEnum.ALL.getValue();
@@ -91,6 +86,7 @@ public class SecurityUtils {
 
     /**
      * 获取用户ID
+     *
      * @return 系统用户ID
      */
     public static Long getCurrentUserId() {
@@ -99,6 +95,7 @@ public class SecurityUtils {
 
     /**
      * 获取用户ID
+     *
      * @return 系统用户ID
      */
     public static Long getCurrentUserId(String token) {
@@ -127,6 +124,7 @@ public class SecurityUtils {
 
     /**
      * 获取Token
+     *
      * @return /
      */
     public static String getToken() {
@@ -140,5 +138,15 @@ public class SecurityUtils {
             log.debug("非法Token：{}", bearerToken);
         }
         return null;
+    }
+
+    @Value("${jwt.header}")
+    public void setHeader(String header) {
+        SecurityUtils.header = header;
+    }
+
+    @Value("${jwt.token-start-with}")
+    public void setTokenStartWith(String tokenStartWith) {
+        SecurityUtils.tokenStartWith = tokenStartWith;
     }
 }

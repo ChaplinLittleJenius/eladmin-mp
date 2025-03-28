@@ -17,6 +17,7 @@ package me.zhengjie.modules.quartz.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
 import java.sql.Timestamp;
 import java.util.List;
 

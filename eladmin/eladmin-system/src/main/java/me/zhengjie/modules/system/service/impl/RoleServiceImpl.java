@@ -21,21 +21,22 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import me.zhengjie.exception.BadRequestException;
+import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.security.service.UserCacheManager;
 import me.zhengjie.modules.security.service.dto.AuthorityDto;
 import me.zhengjie.modules.system.domain.Menu;
 import me.zhengjie.modules.system.domain.Role;
-import me.zhengjie.exception.EntityExistException;
 import me.zhengjie.modules.system.domain.User;
+import me.zhengjie.modules.system.domain.dto.RoleQueryCriteria;
 import me.zhengjie.modules.system.mapper.RoleDeptMapper;
 import me.zhengjie.modules.system.mapper.RoleMapper;
 import me.zhengjie.modules.system.mapper.RoleMenuMapper;
 import me.zhengjie.modules.system.mapper.UserMapper;
 import me.zhengjie.modules.system.service.RoleService;
-import me.zhengjie.modules.system.domain.dto.RoleQueryCriteria;
 import me.zhengjie.utils.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
@@ -130,7 +131,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
         // 更新菜单
         roleMenuMapper.deleteByRoleId(role.getId());
         // 判断是否为空
-        if(CollUtil.isNotEmpty(role.getMenus())){
+        if (CollUtil.isNotEmpty(role.getMenus())) {
             roleMenuMapper.insertData(role.getId(), role.getMenus());
         }
         // 更新缓存
@@ -224,6 +225,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
 
     /**
      * 清理缓存
+     *
      * @param id /
      */
     public void delCaches(Long id, List<User> users) {
